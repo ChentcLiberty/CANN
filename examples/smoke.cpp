@@ -11,7 +11,7 @@ int main() {
       8,
   };
 
-  std::cout << cann_liberty::SelectAlgorithm(request) << '\n';
+  const auto decision = cann_liberty::SelectAlgorithmDecision(request);
+  std::cout << decision.name << ": " << decision.reason << '\n';
   return 0;
 }
-

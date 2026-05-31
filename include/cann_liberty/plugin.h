@@ -29,7 +29,13 @@ struct CollectiveRequest {
   int world_size;
 };
 
+struct AlgorithmDecision {
+  const char* name;
+  const char* reason;
+  double estimated_cost;
+};
+
+AlgorithmDecision SelectAlgorithmDecision(const CollectiveRequest& request);
 const char* SelectAlgorithm(const CollectiveRequest& request);
 
 }  // namespace cann_liberty
-

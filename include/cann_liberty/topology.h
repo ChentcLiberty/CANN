@@ -19,6 +19,8 @@ struct Topology {
 };
 
 Topology BuildFallbackFullMeshTopology(int world_size);
+double AverageBandwidthGbps(const Topology& topology);
+double AverageLatencyUs(const Topology& topology);
+bool IsFullMesh(const Topology& topology);
 
 }  // namespace cann_liberty
-

@@ -25,5 +25,37 @@ Topology BuildFallbackFullMeshTopology(int world_size) {
   return topology;
 }
 
-}  // namespace cann_liberty
+double AverageBandwidthGbps(const Topology& topology) {
+  if (topology.links.empty()) {
+    return 0.0;
+  }
 
+  double total = 0.0;
+  for (const LinkInfo& link : topology.links) {
+    total += link.bandwidth_gbps;
+  }
+  return total / static_cast<double>(topology.links.size());
+}
+
+double AverageLatencyUs(const Topology& topology) {
+  if (topology.links.empty()) {
+    return 0.0;
+  }
+
+  double total = 0.0;
+  for (const LinkInfo& link : topology.links) {
+    total += link.latency_us;
+  }
+  return total / static_cast<double>(topology.links.size());
+}
+
+bool IsFullMesh(const Topology& topology) {
+  if (topology.world_size <= 1) {
+    return true;
+  }
+
+  const int expected_links = topology.world_size * (topology.world_size - 1);
+  return static_cast<int>(topology.links.size()) == expected_links;
+}
+
+}  // namespace cann_liberty
