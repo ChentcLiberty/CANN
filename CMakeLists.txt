@@ -16,6 +16,7 @@ add_library(cann_liberty SHARED
   src/plugin.cpp
   src/topology.cpp
   src/algorithm_selector.cpp
+  src/simulator.cpp
 )
 
 target_include_directories(cann_liberty
@@ -40,4 +41,8 @@ if(CANN_LIBERTY_BUILD_TESTS)
   add_executable(cann_liberty_policy_test tests/unit/policy_test.cpp)
   target_link_libraries(cann_liberty_policy_test PRIVATE cann_liberty)
   add_test(NAME cann_liberty_policy_test COMMAND cann_liberty_policy_test)
+
+  add_executable(cann_liberty_simulator_test tests/unit/simulator_test.cpp)
+  target_link_libraries(cann_liberty_simulator_test PRIVATE cann_liberty)
+  add_test(NAME cann_liberty_simulator_test COMMAND cann_liberty_simulator_test)
 endif()

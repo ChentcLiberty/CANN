@@ -11,3 +11,11 @@ out="/tmp/cann_liberty_policy_test"
 
 "${out}"
 
+out="/tmp/cann_liberty_simulator_test"
+
+"${cxx}" -std=c++17 -Iinclude \
+  src/simulator.cpp \
+  tests/unit/simulator_test.cpp \
+  -o "${out}"
+
+"${out}"
