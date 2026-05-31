@@ -1,0 +1,20 @@
+small_message_threshold: 65536
+large_message_threshold: 1073741824
+
+algorithms:
+  small:
+    - butterfly
+    - pairwise
+  medium:
+    - nhr
+    - dynamic_block_ring
+  large:
+    - mesh
+    - hierarchical_fat_tree
+
+reliability:
+  heartbeat_interval_ms: 100
+  route_switch_deadline_ms: 100
+  checksum: crc32
+  max_retransmit_rate: 0.001
+
