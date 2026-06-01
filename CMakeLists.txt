@@ -11,6 +11,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 option(CANN_LIBERTY_BUILD_TESTS "Build tests" ON)
 option(CANN_LIBERTY_BUILD_EXAMPLES "Build examples" ON)
+option(CANN_LIBERTY_BUILD_BENCHMARKS "Build benchmarks" ON)
 
 add_library(cann_liberty SHARED
   src/plugin.cpp
@@ -36,6 +37,11 @@ target_compile_options(cann_liberty
 if(CANN_LIBERTY_BUILD_EXAMPLES)
   add_executable(cann_liberty_smoke examples/smoke.cpp)
   target_link_libraries(cann_liberty_smoke PRIVATE cann_liberty)
+endif()
+
+if(CANN_LIBERTY_BUILD_BENCHMARKS)
+  add_executable(cann_liberty_policy_benchmark benchmarks/policy_benchmark.cpp)
+  target_link_libraries(cann_liberty_policy_benchmark PRIVATE cann_liberty)
 endif()
 
 if(CANN_LIBERTY_BUILD_TESTS)

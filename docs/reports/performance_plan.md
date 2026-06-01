@@ -19,3 +19,8 @@
 - 大数据块：>= 1GB
 - 动态拓扑：节点增减、链路故障
 
+## 数据采集路径
+
+1. Simulator 阶段：使用 `./scripts/benchmark_local.sh` 生成策略和语义模拟 CSV。
+2. HCCL 阶段：复用同一组通信原语、数据规模和 world size，将后端切换为 HCCL。
+3. 报告阶段：对比原生 HCCL、基础 Ring/Mesh 和本项目算法的带宽、延迟和加速比。

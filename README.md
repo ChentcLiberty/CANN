@@ -55,3 +55,9 @@
 ```bash
 ./scripts/local_smoke.sh
 ```
+
+本地策略基准：
+
+```bash
+./scripts/benchmark_local.sh
+```
