@@ -19,3 +19,12 @@ out="/tmp/cann_liberty_simulator_test"
   -o "${out}"
 
 "${out}"
+
+out="/tmp/cann_liberty_runtime_test"
+
+"${cxx}" -std=c++17 -Iinclude \
+  src/plugin.cpp src/simulator.cpp src/runtime.cpp src/hccl_adapter.cpp \
+  tests/unit/runtime_test.cpp \
+  -o "${out}"
+
+"${out}"

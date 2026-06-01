@@ -1,0 +1,49 @@
+#include "cann_liberty/hccl_adapter.h"
+#include "cann_liberty/runtime.h"
+
+#include <cassert>
+#include <cstring>
+#include <stdexcept>
+#include <vector>
+
+int main() {
+  const cann_liberty::ClusterBuffers input{
+      {1.0F, 2.0F, 3.0F, 4.0F},
+      {10.0F, 20.0F, 30.0F, 40.0F},
+      {100.0F, 200.0F, 300.0F, 400.0F},
+      {1000.0F, 2000.0F, 3000.0F, 4000.0F},
+  };
+
+  const cann_liberty::CollectiveRequest request{
+      cann_liberty::CollectiveKind::AllReduce,
+      cann_liberty::DataType::Float32,
+      4 * sizeof(float),
+      0,
+      4,
+  };
+
+  const cann_liberty::RuntimeConfig config{
+      cann_liberty::BackendKind::Simulator,
+      0,
+  };
+
+  const auto result = cann_liberty::ExecuteCollective(config, request, input);
+  assert(std::strcmp(result.backend_name.c_str(), "simulator") == 0);
+  assert(std::strcmp(result.decision.name, "butterfly") == 0);
+  assert((result.buffers[0] == std::vector<float>{1111.0F, 2222.0F, 3333.0F, 4444.0F}));
+
+  const auto status = cann_liberty::GetHcclAdapterStatus();
+  assert(!status.available);
+  assert(std::strcmp(cann_liberty::ExpectedHcclEntryPoint(cann_liberty::CollectiveKind::AllReduce),
+                     "hcclAllReduce") == 0);
+
+  bool threw = false;
+  try {
+    cann_liberty::ExecuteCollective({cann_liberty::BackendKind::Hccl, 0}, request, input);
+  } catch (const std::runtime_error&) {
+    threw = true;
+  }
+  assert(threw);
+
+  return 0;
+}
