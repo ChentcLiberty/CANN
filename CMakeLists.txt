@@ -12,6 +12,11 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 option(CANN_LIBERTY_BUILD_TESTS "Build tests" ON)
 option(CANN_LIBERTY_BUILD_EXAMPLES "Build examples" ON)
 option(CANN_LIBERTY_BUILD_BENCHMARKS "Build benchmarks" ON)
+option(CANN_LIBERTY_ENABLE_HCCL "Enable real CANN/HCCL adapter" OFF)
+
+set(CANN_ROOT "" CACHE PATH "Ascend CANN toolkit root")
+set(HCCL_INCLUDE_DIR "" CACHE PATH "HCCL include directory")
+set(HCCL_LIBRARY "" CACHE FILEPATH "HCCL shared library")
 
 add_library(cann_liberty SHARED
   src/plugin.cpp
@@ -35,6 +40,39 @@ target_compile_options(cann_liberty
     -Wextra
     -Wpedantic
 )
+
+if(CANN_LIBERTY_ENABLE_HCCL)
+  target_compile_definitions(cann_liberty PRIVATE CANN_LIBERTY_ENABLE_HCCL)
+
+  if(CANN_ROOT AND NOT HCCL_INCLUDE_DIR)
+    find_path(HCCL_INCLUDE_DIR
+      NAMES hccl.h hccl/hccl.h
+      PATHS ${CANN_ROOT}
+      PATH_SUFFIXES include include/hccl
+      NO_DEFAULT_PATH
+    )
+  endif()
+
+  if(CANN_ROOT AND NOT HCCL_LIBRARY)
+    find_library(HCCL_LIBRARY
+      NAMES hccl
+      PATHS ${CANN_ROOT}
+      PATH_SUFFIXES lib64 lib
+      NO_DEFAULT_PATH
+    )
+  endif()
+
+  if(NOT HCCL_INCLUDE_DIR)
+    message(FATAL_ERROR "CANN_LIBERTY_ENABLE_HCCL=ON requires HCCL_INCLUDE_DIR or CANN_ROOT")
+  endif()
+
+  if(NOT HCCL_LIBRARY)
+    message(FATAL_ERROR "CANN_LIBERTY_ENABLE_HCCL=ON requires HCCL_LIBRARY or CANN_ROOT")
+  endif()
+
+  target_include_directories(cann_liberty PRIVATE ${HCCL_INCLUDE_DIR})
+  target_link_libraries(cann_liberty PRIVATE ${HCCL_LIBRARY})
+endif()
 
 if(CANN_LIBERTY_BUILD_EXAMPLES)
   add_executable(cann_liberty_smoke examples/smoke.cpp)

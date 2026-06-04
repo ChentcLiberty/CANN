@@ -78,3 +78,9 @@
 ```bash
 ./scripts/collect_artifacts.sh
 ```
+
+探测 CANN/HCCL 环境：
+
+```bash
+./scripts/detect_cann_env.sh
+```
