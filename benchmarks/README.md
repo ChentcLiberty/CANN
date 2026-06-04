@@ -13,7 +13,7 @@
 输出 CSV 字段：
 
 ```text
-kind,world_size,bytes_per_rank,algorithm,backend,elapsed_us
+kind,world_size,bytes_per_rank,total_bytes,algorithm,backend,stage_count,step_count,elapsed_us,sim_mib_per_s
 ```
 
 该基准只衡量 Simulator 后端的策略调度和 CPU 语义模拟耗时，不代表真实 HCCL/NPU 性能。

@@ -1,3 +1,4 @@
+#include "cann_liberty/algorithm_plan.h"
 #include "cann_liberty/runtime.h"
 
 #include <chrono>
@@ -57,7 +58,8 @@ int main() {
       1024 * 1024,
   };
 
-  std::cout << "kind,world_size,bytes_per_rank,algorithm,backend,elapsed_us\n";
+  std::cout << "kind,world_size,bytes_per_rank,total_bytes,algorithm,backend,"
+               "stage_count,step_count,elapsed_us,sim_mib_per_s\n";
 
   for (const int world_size : world_sizes) {
     for (const std::size_t bytes : bytes_per_rank) {
@@ -81,13 +83,23 @@ int main() {
         const auto stop = std::chrono::steady_clock::now();
         const auto elapsed_us =
             std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count();
+        const auto plan = cann_liberty::BuildAlgorithmPlan(request);
+        const std::size_t total_bytes = bytes * static_cast<std::size_t>(world_size);
+        const double seconds = static_cast<double>(elapsed_us) / 1000000.0;
+        const double mib_per_s =
+            seconds > 0.0 ? (static_cast<double>(total_bytes) / (1024.0 * 1024.0)) / seconds
+                          : 0.0;
 
         std::cout << KindName(kind) << ','
                   << world_size << ','
                   << bytes << ','
+                  << total_bytes << ','
                   << result.decision.name << ','
                   << result.backend_name << ','
-                  << elapsed_us << '\n';
+                  << plan.stages.size() << ','
+                  << cann_liberty::CountPlanSteps(plan) << ','
+                  << elapsed_us << ','
+                  << mib_per_s << '\n';
       }
     }
   }
