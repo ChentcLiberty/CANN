@@ -1,4 +1,5 @@
 #include "cann_liberty/plugin.h"
+#include "cann_liberty/topology.h"
 
 namespace cann_liberty {
 
@@ -58,6 +59,43 @@ AlgorithmDecision SelectAlgorithmDecision(const CollectiveRequest& request) {
   }
 
   return {"ring", "fallback baseline", CostByMessageAndScale(request, 1.5)};
+}
+
+AlgorithmDecision SelectAlgorithmDecision(const CollectiveRequest& request,
+                                          const Topology& topology) {
+  const TopologyKind topology_kind = ClassifyTopology(topology);
+
+  if (topology_kind == TopologyKind::Sparse) {
+    if (request.kind == CollectiveKind::Broadcast) {
+      return {"adaptive_tree",
+              "sparse topology favors route-aware tree broadcast",
+              CostByMessageAndScale(request, 1.2)};
+    }
+    return {"nhr",
+            "sparse topology favors non-uniform ring with congestion avoidance",
+            CostByMessageAndScale(request, 1.35)};
+  }
+
+  if (topology_kind == TopologyKind::Hierarchical) {
+    if (request.bytes >= kLargeMessageBytes || request.world_size > 8) {
+      return {"hierarchical_fat_tree",
+              "hierarchical topology detected across HCCS/RoCE style links",
+              CostByMessageAndScale(request, 0.7)};
+    }
+    if (request.kind == CollectiveKind::AllReduce) {
+      return {"two_level_nhr",
+              "hierarchical topology favors intra-node reduce then inter-node exchange",
+              CostByMessageAndScale(request, 0.9)};
+    }
+  }
+
+  if (topology_kind == TopologyKind::FullMesh && request.bytes >= kLargeMessageBytes) {
+    return {"mesh",
+            "full-mesh topology favors bandwidth-saturating peer exchange",
+            CostByMessageAndScale(request, 0.85)};
+  }
+
+  return SelectAlgorithmDecision(request);
 }
 
 const char* SelectAlgorithm(const CollectiveRequest& request) {

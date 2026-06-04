@@ -23,8 +23,17 @@ out="/tmp/cann_liberty_simulator_test"
 out="/tmp/cann_liberty_runtime_test"
 
 "${cxx}" -std=c++17 -Iinclude \
-  src/plugin.cpp src/simulator.cpp src/runtime.cpp src/hccl_adapter.cpp \
+  src/plugin.cpp src/topology.cpp src/simulator.cpp src/runtime.cpp src/hccl_adapter.cpp \
   tests/unit/runtime_test.cpp \
+  -o "${out}"
+
+"${out}"
+
+out="/tmp/cann_liberty_c_api_test"
+
+"${cxx}" -std=c++17 -Iinclude \
+  src/plugin.cpp src/topology.cpp src/hccl_adapter.cpp src/c_api.cpp \
+  tests/unit/c_api_test.cpp \
   -o "${out}"
 
 "${out}"

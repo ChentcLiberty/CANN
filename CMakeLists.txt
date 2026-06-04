@@ -20,6 +20,7 @@ add_library(cann_liberty SHARED
   src/simulator.cpp
   src/runtime.cpp
   src/hccl_adapter.cpp
+  src/c_api.cpp
 )
 
 target_include_directories(cann_liberty
@@ -57,4 +58,8 @@ if(CANN_LIBERTY_BUILD_TESTS)
   add_executable(cann_liberty_runtime_test tests/unit/runtime_test.cpp)
   target_link_libraries(cann_liberty_runtime_test PRIVATE cann_liberty)
   add_test(NAME cann_liberty_runtime_test COMMAND cann_liberty_runtime_test)
+
+  add_executable(cann_liberty_c_api_test tests/unit/c_api_test.cpp)
+  target_link_libraries(cann_liberty_c_api_test PRIVATE cann_liberty)
+  add_test(NAME cann_liberty_c_api_test COMMAND cann_liberty_c_api_test)
 endif()

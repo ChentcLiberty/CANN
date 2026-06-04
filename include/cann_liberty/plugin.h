@@ -5,6 +5,8 @@
 
 namespace cann_liberty {
 
+struct Topology;
+
 enum class CollectiveKind {
   AllReduce,
   AllGather,
@@ -36,6 +38,8 @@ struct AlgorithmDecision {
 };
 
 AlgorithmDecision SelectAlgorithmDecision(const CollectiveRequest& request);
+AlgorithmDecision SelectAlgorithmDecision(const CollectiveRequest& request,
+                                          const Topology& topology);
 const char* SelectAlgorithm(const CollectiveRequest& request);
 
 }  // namespace cann_liberty
