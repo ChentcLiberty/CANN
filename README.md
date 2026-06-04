@@ -44,6 +44,7 @@
 - [x] 建立运行时后端抽象与 HCCL 适配占位
 - [x] 建立拓扑感知分类与算法选择
 - [x] 建立 C ABI 占位接口
+- [x] 建立集合通信算法计划层
 - [ ] 接入 CANN/HCCL 头文件与编译环境
 - [ ] 实现拓扑探测与算法选择框架
 - [ ] 实现集合通信算法
@@ -64,4 +65,10 @@
 
 ```bash
 ./scripts/benchmark_local.sh
+```
+
+导出算法通信计划：
+
+```bash
+./scripts/dump_plan.sh all_reduce 1048576 8
 ```

@@ -8,6 +8,7 @@
 - 模拟器：CPU 验证 AllReduce、AllGather、ReduceScatter、Broadcast、AllToAll 语义。
 - 运行时：Simulator/HCCL 后端抽象，当前默认 Simulator。
 - Benchmark：可输出 CSV 作为后续性能报告起点。
+- 算法计划层：可生成 AllReduce、AllGather、ReduceScatter、Broadcast、AllToAll 的通信阶段和步骤。
 
 ## 最急需完成
 

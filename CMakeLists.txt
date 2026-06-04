@@ -21,6 +21,7 @@ add_library(cann_liberty SHARED
   src/runtime.cpp
   src/hccl_adapter.cpp
   src/c_api.cpp
+  src/algorithm_plan.cpp
 )
 
 target_include_directories(cann_liberty
@@ -45,6 +46,9 @@ if(CANN_LIBERTY_BUILD_BENCHMARKS)
   target_link_libraries(cann_liberty_policy_benchmark PRIVATE cann_liberty)
 endif()
 
+add_executable(cann_liberty_plan_dump tools/plan_dump.cpp)
+target_link_libraries(cann_liberty_plan_dump PRIVATE cann_liberty)
+
 if(CANN_LIBERTY_BUILD_TESTS)
   enable_testing()
   add_executable(cann_liberty_policy_test tests/unit/policy_test.cpp)
@@ -62,4 +66,8 @@ if(CANN_LIBERTY_BUILD_TESTS)
   add_executable(cann_liberty_c_api_test tests/unit/c_api_test.cpp)
   target_link_libraries(cann_liberty_c_api_test PRIVATE cann_liberty)
   add_test(NAME cann_liberty_c_api_test COMMAND cann_liberty_c_api_test)
+
+  add_executable(cann_liberty_algorithm_plan_test tests/unit/algorithm_plan_test.cpp)
+  target_link_libraries(cann_liberty_algorithm_plan_test PRIVATE cann_liberty)
+  add_test(NAME cann_liberty_algorithm_plan_test COMMAND cann_liberty_algorithm_plan_test)
 endif()
