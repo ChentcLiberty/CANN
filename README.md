@@ -72,3 +72,9 @@
 ```bash
 ./scripts/dump_plan.sh all_reduce 1048576 8
 ```
+
+归档当前验证和计划产物：
+
+```bash
+./scripts/collect_artifacts.sh
+```

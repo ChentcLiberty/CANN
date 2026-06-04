@@ -21,6 +21,8 @@ deliverables/*.zip
 deliverables/*.tar.gz
 deliverables/*.mp4
 deliverables/*.pdf
+deliverables/artifacts/*.csv
+deliverables/artifacts/verification_log.md
 
 # Python/editor noise
 __pycache__/
@@ -34,4 +36,3 @@ venv/
 # OS files
 .DS_Store
 Thumbs.db
-

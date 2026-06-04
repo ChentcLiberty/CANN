@@ -10,6 +10,7 @@
 - Benchmark：可输出 CSV 作为后续性能报告起点。
 - 算法计划层：可生成 AllReduce、AllGather、ReduceScatter、Broadcast、AllToAll 的通信阶段和步骤。
 - 参考项目对标：已记录 cann-hccl、NCCL、nccl-tests、MSCCL/MSCCL++ 的借鉴点。
+- 产物归档：可一键生成 smoke 日志、benchmark CSV 和核心算法计划 CSV。
 
 ## 最急需完成
 
