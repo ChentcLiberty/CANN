@@ -1,6 +1,9 @@
 #include "cann_liberty/runtime.h"
 
+#include "cann_liberty/hccl_adapter.h"
+
 #include <stdexcept>
+#include <string>
 
 namespace cann_liberty {
 
@@ -20,7 +23,25 @@ CollectiveResult ExecuteCollective(const RuntimeConfig& config,
   const AlgorithmDecision decision = SelectAlgorithmDecision(request);
 
   if (config.backend == BackendKind::Hccl) {
-    throw std::runtime_error("HCCL backend is not linked in this scaffold build");
+    const void* send_buffer = nullptr;
+    if (!input.empty() && !input.front().empty()) {
+      send_buffer = input.front().data();
+    }
+
+    const HcclCallResult hccl_result = ExecuteHcclCollective({
+        request.kind,
+        request.dtype,
+        send_buffer,
+        nullptr,
+        request.bytes,
+        config.root_rank,
+        request.rank,
+        request.world_size,
+    });
+
+    if (!hccl_result.ok) {
+      throw std::runtime_error(std::string(hccl_result.entry_point) + ": " + hccl_result.message);
+    }
   }
 
   ClusterBuffers output;

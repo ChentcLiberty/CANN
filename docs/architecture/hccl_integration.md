@@ -11,6 +11,25 @@
 - HCCL 适配状态：`include/cann_liberty/hccl_adapter.h`
 - 运行时后端：`include/cann_liberty/runtime.h`
 
+当前 HCCL adapter 已提供统一调用边界：
+
+- `HcclCallRequest`
+- `HcclCallResult`
+- `ExecuteHcclCollective`
+
+默认 stub build 会返回 unavailable；真实 CANN/HCCL build 后续在同一函数内完成 lowering。
+
+## Lowering 待办
+
+`ExecuteHcclCollective` 后续需要完成：
+
+1. 将 `DataType` 映射到 HCCL 数据类型。
+2. 将 AllReduce 的 reduce op 固定为 sum 或接入显式 op 参数。
+3. 接收真实 communicator 和 stream，而不是当前 scaffold 的占位字段。
+4. 按 `CollectiveKind` 调用对应 HCCL 入口。
+5. 将 HCCL 返回码转换为 `HcclCallResult`。
+6. 为 AllReduce 建立首个实机 smoke test。
+
 ## 接入步骤
 
 1. 确认 CANN 环境变量

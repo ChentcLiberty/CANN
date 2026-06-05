@@ -2,6 +2,8 @@
 
 #include "cann_liberty/plugin.h"
 
+#include <cstddef>
+
 namespace cann_liberty {
 
 struct HcclAdapterStatus {
@@ -9,7 +11,25 @@ struct HcclAdapterStatus {
   const char* reason;
 };
 
+struct HcclCallRequest {
+  CollectiveKind kind;
+  DataType dtype;
+  const void* send_buffer;
+  void* recv_buffer;
+  std::size_t bytes;
+  int root_rank;
+  int rank;
+  int world_size;
+};
+
+struct HcclCallResult {
+  bool ok;
+  const char* entry_point;
+  const char* message;
+};
+
 HcclAdapterStatus GetHcclAdapterStatus();
 const char* ExpectedHcclEntryPoint(CollectiveKind kind);
+HcclCallResult ExecuteHcclCollective(const HcclCallRequest& request);
 
 }  // namespace cann_liberty

@@ -26,4 +26,20 @@ const char* ExpectedHcclEntryPoint(CollectiveKind kind) {
   return "unknown";
 }
 
+HcclCallResult ExecuteHcclCollective(const HcclCallRequest& request) {
+#if defined(CANN_LIBERTY_ENABLE_HCCL)
+  return HcclCallResult{
+      false,
+      ExpectedHcclEntryPoint(request.kind),
+      "real HCCL lowering is not implemented yet",
+  };
+#else
+  return HcclCallResult{
+      false,
+      ExpectedHcclEntryPoint(request.kind),
+      "HCCL adapter is unavailable in stub build",
+  };
+#endif
+}
+
 }  // namespace cann_liberty

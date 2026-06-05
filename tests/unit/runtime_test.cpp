@@ -36,6 +36,21 @@ int main() {
   assert(!status.available);
   assert(std::strcmp(cann_liberty::ExpectedHcclEntryPoint(cann_liberty::CollectiveKind::AllReduce),
                      "hcclAllReduce") == 0);
+  assert(std::strcmp(cann_liberty::ExpectedHcclEntryPoint(cann_liberty::CollectiveKind::AllGather),
+                     "hcclAllGather") == 0);
+
+  const auto hccl_result = cann_liberty::ExecuteHcclCollective({
+      cann_liberty::CollectiveKind::AllReduce,
+      cann_liberty::DataType::Float32,
+      input[0].data(),
+      nullptr,
+      4 * sizeof(float),
+      0,
+      0,
+      4,
+  });
+  assert(!hccl_result.ok);
+  assert(std::strcmp(hccl_result.entry_point, "hcclAllReduce") == 0);
 
   bool threw = false;
   try {
