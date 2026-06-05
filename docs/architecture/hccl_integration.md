@@ -16,6 +16,8 @@
 - `HcclCallRequest`
 - `HcclCallResult`
 - `ExecuteHcclCollective`
+- `ExpectedHcclDataType`
+- `ExpectedHcclReduceOp`
 
 默认 stub build 会返回 unavailable；真实 CANN/HCCL build 后续在同一函数内完成 lowering。
 
@@ -23,8 +25,8 @@
 
 `ExecuteHcclCollective` 后续需要完成：
 
-1. 将 `DataType` 映射到 HCCL 数据类型。
-2. 将 AllReduce 的 reduce op 固定为 sum 或接入显式 op 参数。
+1. 将 `ExpectedHcclDataType` 的字符串映射替换为真实 HCCL 数据类型 enum。
+2. 将 `ExpectedHcclReduceOp` 的字符串映射替换为真实 HCCL reduce op enum。
 3. 接收真实 communicator 和 stream，而不是当前 scaffold 的占位字段。
 4. 按 `CollectiveKind` 调用对应 HCCL 入口。
 5. 将 HCCL 返回码转换为 `HcclCallResult`。

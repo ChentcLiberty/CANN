@@ -43,6 +43,9 @@ int main(int argc, char** argv) {
     const cann_liberty::CollectiveRequest request{
         ParseKind(argv[1]),
         cann_liberty::DataType::Float32,
+        argv[1] == std::string("all_reduce") || argv[1] == std::string("reduce_scatter")
+            ? cann_liberty::ReduceOp::Sum
+            : cann_liberty::ReduceOp::None,
         static_cast<std::size_t>(std::strtoull(argv[2], nullptr, 10)),
         0,
         std::atoi(argv[3]),

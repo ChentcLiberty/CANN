@@ -37,12 +37,29 @@ cann_liberty::DataType ToDataType(CannLibertyDataType dtype) {
   return cann_liberty::DataType::Unknown;
 }
 
+cann_liberty::ReduceOp ToReduceOp(CannLibertyReduceOp op) {
+  switch (op) {
+    case CANN_LIBERTY_REDUCE_SUM:
+      return cann_liberty::ReduceOp::Sum;
+    case CANN_LIBERTY_REDUCE_PROD:
+      return cann_liberty::ReduceOp::Prod;
+    case CANN_LIBERTY_REDUCE_MAX:
+      return cann_liberty::ReduceOp::Max;
+    case CANN_LIBERTY_REDUCE_MIN:
+      return cann_liberty::ReduceOp::Min;
+    case CANN_LIBERTY_REDUCE_NONE:
+      return cann_liberty::ReduceOp::None;
+  }
+  return cann_liberty::ReduceOp::None;
+}
+
 }  // namespace
 
 extern "C" CannLibertyDecision cann_liberty_select_algorithm(CannLibertyRequest request) {
   const cann_liberty::CollectiveRequest cpp_request{
       ToCollectiveKind(request.kind),
       ToDataType(request.dtype),
+      ToReduceOp(request.reduce_op),
       request.bytes,
       request.rank,
       request.world_size,

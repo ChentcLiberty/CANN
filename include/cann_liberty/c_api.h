@@ -22,9 +22,18 @@ typedef enum CannLibertyDataType {
   CANN_LIBERTY_UNKNOWN = 255,
 } CannLibertyDataType;
 
+typedef enum CannLibertyReduceOp {
+  CANN_LIBERTY_REDUCE_SUM = 0,
+  CANN_LIBERTY_REDUCE_PROD = 1,
+  CANN_LIBERTY_REDUCE_MAX = 2,
+  CANN_LIBERTY_REDUCE_MIN = 3,
+  CANN_LIBERTY_REDUCE_NONE = 255,
+} CannLibertyReduceOp;
+
 typedef struct CannLibertyRequest {
   CannLibertyCollectiveKind kind;
   CannLibertyDataType dtype;
+  CannLibertyReduceOp reduce_op;
   size_t bytes;
   int rank;
   int world_size;

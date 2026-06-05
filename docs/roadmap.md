@@ -12,6 +12,7 @@
 - 参考项目对标：已记录 cann-hccl、NCCL、nccl-tests、MSCCL/MSCCL++ 的借鉴点。
 - 产物归档：可一键生成 smoke 日志、benchmark CSV 和核心算法计划 CSV。
 - CANN/HCCL 环境探测：可扫描 Ascend Toolkit 头文件和动态库。
+- HCCL lowering 边界：已建立 collective、dtype、reduce-op 映射占位。
 
 ## 最急需完成
 

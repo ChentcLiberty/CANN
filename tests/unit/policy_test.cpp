@@ -13,6 +13,10 @@ void ExpectAlgorithm(cann_liberty::CollectiveKind kind,
   const cann_liberty::CollectiveRequest request{
       kind,
       cann_liberty::DataType::Float32,
+      kind == cann_liberty::CollectiveKind::AllReduce ||
+              kind == cann_liberty::CollectiveKind::ReduceScatter
+          ? cann_liberty::ReduceOp::Sum
+          : cann_liberty::ReduceOp::None,
       bytes,
       0,
       world_size,
@@ -31,6 +35,10 @@ void ExpectTopologyAlgorithm(cann_liberty::CollectiveKind kind,
   const cann_liberty::CollectiveRequest request{
       kind,
       cann_liberty::DataType::Float32,
+      kind == cann_liberty::CollectiveKind::AllReduce ||
+              kind == cann_liberty::CollectiveKind::ReduceScatter
+          ? cann_liberty::ReduceOp::Sum
+          : cann_liberty::ReduceOp::None,
       bytes,
       0,
       world_size,

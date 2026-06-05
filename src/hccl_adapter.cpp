@@ -26,7 +26,47 @@ const char* ExpectedHcclEntryPoint(CollectiveKind kind) {
   return "unknown";
 }
 
+const char* ExpectedHcclDataType(DataType dtype) {
+  switch (dtype) {
+    case DataType::Float32:
+      return "HCCL_DATA_TYPE_FP32";
+    case DataType::Float16:
+      return "HCCL_DATA_TYPE_FP16";
+    case DataType::BFloat16:
+      return "HCCL_DATA_TYPE_BFP16";
+    case DataType::Int8:
+      return "HCCL_DATA_TYPE_INT8";
+    case DataType::Unknown:
+      return "HCCL_DATA_TYPE_UNKNOWN";
+  }
+  return "HCCL_DATA_TYPE_UNKNOWN";
+}
+
+const char* ExpectedHcclReduceOp(ReduceOp op) {
+  switch (op) {
+    case ReduceOp::Sum:
+      return "HCCL_REDUCE_SUM";
+    case ReduceOp::Prod:
+      return "HCCL_REDUCE_PROD";
+    case ReduceOp::Max:
+      return "HCCL_REDUCE_MAX";
+    case ReduceOp::Min:
+      return "HCCL_REDUCE_MIN";
+    case ReduceOp::None:
+      return "HCCL_REDUCE_NONE";
+  }
+  return "HCCL_REDUCE_NONE";
+}
+
 HcclCallResult ExecuteHcclCollective(const HcclCallRequest& request) {
+  if (request.kind == CollectiveKind::AllReduce && request.reduce_op == ReduceOp::None) {
+    return HcclCallResult{
+        false,
+        ExpectedHcclEntryPoint(request.kind),
+        "AllReduce requires an explicit reduce op",
+    };
+  }
+
 #if defined(CANN_LIBERTY_ENABLE_HCCL)
   return HcclCallResult{
       false,

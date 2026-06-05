@@ -7,6 +7,7 @@ int main() {
   const CannLibertyRequest request{
       CANN_LIBERTY_ALL_REDUCE,
       CANN_LIBERTY_FLOAT32,
+      CANN_LIBERTY_REDUCE_SUM,
       1024 * 1024,
       0,
       8,

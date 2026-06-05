@@ -11,6 +11,10 @@ cann_liberty::CollectiveRequest Request(cann_liberty::CollectiveKind kind,
   return cann_liberty::CollectiveRequest{
       kind,
       cann_liberty::DataType::Float32,
+      kind == cann_liberty::CollectiveKind::AllReduce ||
+              kind == cann_liberty::CollectiveKind::ReduceScatter
+          ? cann_liberty::ReduceOp::Sum
+          : cann_liberty::ReduceOp::None,
       bytes,
       0,
       world_size,

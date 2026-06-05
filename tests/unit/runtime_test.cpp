@@ -17,6 +17,7 @@ int main() {
   const cann_liberty::CollectiveRequest request{
       cann_liberty::CollectiveKind::AllReduce,
       cann_liberty::DataType::Float32,
+      cann_liberty::ReduceOp::Sum,
       4 * sizeof(float),
       0,
       4,
@@ -38,10 +39,19 @@ int main() {
                      "hcclAllReduce") == 0);
   assert(std::strcmp(cann_liberty::ExpectedHcclEntryPoint(cann_liberty::CollectiveKind::AllGather),
                      "hcclAllGather") == 0);
+  assert(std::strcmp(cann_liberty::ExpectedHcclDataType(cann_liberty::DataType::Float32),
+                     "HCCL_DATA_TYPE_FP32") == 0);
+  assert(std::strcmp(cann_liberty::ExpectedHcclDataType(cann_liberty::DataType::BFloat16),
+                     "HCCL_DATA_TYPE_BFP16") == 0);
+  assert(std::strcmp(cann_liberty::ExpectedHcclReduceOp(cann_liberty::ReduceOp::Sum),
+                     "HCCL_REDUCE_SUM") == 0);
+  assert(std::strcmp(cann_liberty::ExpectedHcclReduceOp(cann_liberty::ReduceOp::None),
+                     "HCCL_REDUCE_NONE") == 0);
 
   const auto hccl_result = cann_liberty::ExecuteHcclCollective({
       cann_liberty::CollectiveKind::AllReduce,
       cann_liberty::DataType::Float32,
+      cann_liberty::ReduceOp::Sum,
       input[0].data(),
       nullptr,
       4 * sizeof(float),

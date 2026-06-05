@@ -31,6 +31,7 @@ CollectiveResult ExecuteCollective(const RuntimeConfig& config,
     const HcclCallResult hccl_result = ExecuteHcclCollective({
         request.kind,
         request.dtype,
+        request.reduce_op,
         send_buffer,
         nullptr,
         request.bytes,

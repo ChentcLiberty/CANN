@@ -23,9 +23,18 @@ enum class DataType {
   Unknown,
 };
 
+enum class ReduceOp {
+  Sum,
+  Prod,
+  Max,
+  Min,
+  None,
+};
+
 struct CollectiveRequest {
   CollectiveKind kind;
   DataType dtype;
+  ReduceOp reduce_op;
   std::size_t bytes;
   int rank;
   int world_size;

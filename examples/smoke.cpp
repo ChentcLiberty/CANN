@@ -13,6 +13,7 @@ int main() {
   const cann_liberty::CollectiveRequest request{
       cann_liberty::CollectiveKind::AllReduce,
       cann_liberty::DataType::Float32,
+      cann_liberty::ReduceOp::Sum,
       4 * sizeof(float),
       0,
       4,
