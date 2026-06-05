@@ -10,6 +10,10 @@ HcclAdapterStatus GetHcclAdapterStatus() {
 #endif
 }
 
+bool HasUsableHcclHandles(const HcclRuntimeHandles& handles) {
+  return handles.communicator != nullptr && handles.stream != nullptr;
+}
+
 const char* ExpectedHcclEntryPoint(CollectiveKind kind) {
   switch (kind) {
     case CollectiveKind::AllReduce:
@@ -68,6 +72,14 @@ HcclCallResult ExecuteHcclCollective(const HcclCallRequest& request) {
   }
 
 #if defined(CANN_LIBERTY_ENABLE_HCCL)
+  if (!HasUsableHcclHandles(request.handles)) {
+    return HcclCallResult{
+        false,
+        ExpectedHcclEntryPoint(request.kind),
+        "real HCCL build requires communicator and stream handles",
+    };
+  }
+
   return HcclCallResult{
       false,
       ExpectedHcclEntryPoint(request.kind),

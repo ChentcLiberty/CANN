@@ -15,11 +15,17 @@
 
 - `HcclCallRequest`
 - `HcclCallResult`
+- `HcclRuntimeHandles`
 - `ExecuteHcclCollective`
 - `ExpectedHcclDataType`
 - `ExpectedHcclReduceOp`
 
 默认 stub build 会返回 unavailable；真实 CANN/HCCL build 后续在同一函数内完成 lowering。
+
+`HcclRuntimeHandles` 当前用 opaque 指针表达 communicator 和 stream：
+
+- stub build：允许为空，用于保持本地可测试。
+- real HCCL build：必须提供非空 communicator 和 stream。
 
 ## Lowering 待办
 
@@ -27,7 +33,7 @@
 
 1. 将 `ExpectedHcclDataType` 的字符串映射替换为真实 HCCL 数据类型 enum。
 2. 将 `ExpectedHcclReduceOp` 的字符串映射替换为真实 HCCL reduce op enum。
-3. 接收真实 communicator 和 stream，而不是当前 scaffold 的占位字段。
+3. 将 `HcclRuntimeHandles` 的 opaque 指针替换或转换为真实 communicator 和 stream 类型。
 4. 按 `CollectiveKind` 调用对应 HCCL 入口。
 5. 将 HCCL 返回码转换为 `HcclCallResult`。
 6. 为 AllReduce 建立首个实机 smoke test。

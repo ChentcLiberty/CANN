@@ -11,10 +11,16 @@ struct HcclAdapterStatus {
   const char* reason;
 };
 
+struct HcclRuntimeHandles {
+  void* communicator;
+  void* stream;
+};
+
 struct HcclCallRequest {
   CollectiveKind kind;
   DataType dtype;
   ReduceOp reduce_op;
+  HcclRuntimeHandles handles;
   const void* send_buffer;
   void* recv_buffer;
   std::size_t bytes;
@@ -30,6 +36,7 @@ struct HcclCallResult {
 };
 
 HcclAdapterStatus GetHcclAdapterStatus();
+bool HasUsableHcclHandles(const HcclRuntimeHandles& handles);
 const char* ExpectedHcclEntryPoint(CollectiveKind kind);
 const char* ExpectedHcclDataType(DataType dtype);
 const char* ExpectedHcclReduceOp(ReduceOp op);

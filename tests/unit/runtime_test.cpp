@@ -47,11 +47,17 @@ int main() {
                      "HCCL_REDUCE_SUM") == 0);
   assert(std::strcmp(cann_liberty::ExpectedHcclReduceOp(cann_liberty::ReduceOp::None),
                      "HCCL_REDUCE_NONE") == 0);
+  assert(!cann_liberty::HasUsableHcclHandles({nullptr, nullptr}));
+
+  int fake_comm = 1;
+  int fake_stream = 1;
+  assert(cann_liberty::HasUsableHcclHandles({&fake_comm, &fake_stream}));
 
   const auto hccl_result = cann_liberty::ExecuteHcclCollective({
       cann_liberty::CollectiveKind::AllReduce,
       cann_liberty::DataType::Float32,
       cann_liberty::ReduceOp::Sum,
+      {nullptr, nullptr},
       input[0].data(),
       nullptr,
       4 * sizeof(float),
