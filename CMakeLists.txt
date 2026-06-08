@@ -77,6 +77,9 @@ endif()
 if(CANN_LIBERTY_BUILD_EXAMPLES)
   add_executable(cann_liberty_smoke examples/smoke.cpp)
   target_link_libraries(cann_liberty_smoke PRIVATE cann_liberty)
+
+  add_executable(cann_liberty_collective_smoke examples/collective_smoke.cpp)
+  target_link_libraries(cann_liberty_collective_smoke PRIVATE cann_liberty)
 endif()
 
 if(CANN_LIBERTY_BUILD_BENCHMARKS)

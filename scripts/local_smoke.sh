@@ -11,6 +11,15 @@ out="/tmp/cann_liberty_policy_test"
 
 "${out}"
 
+out="/tmp/cann_liberty_collective_smoke"
+
+"${cxx}" -std=c++17 -Iinclude \
+  src/plugin.cpp src/topology.cpp src/simulator.cpp src/runtime.cpp src/hccl_adapter.cpp \
+  examples/collective_smoke.cpp \
+  -o "${out}"
+
+"${out}" simulator all_reduce 1048576 8
+
 out="/tmp/cann_liberty_simulator_test"
 
 "${cxx}" -std=c++17 -Iinclude \

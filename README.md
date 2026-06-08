@@ -84,3 +84,9 @@
 ```bash
 ./scripts/detect_cann_env.sh
 ```
+
+单原语 smoke：
+
+```bash
+./scripts/collective_smoke.sh simulator all_reduce 1048576 8
+```

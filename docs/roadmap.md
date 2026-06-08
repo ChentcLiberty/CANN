@@ -14,6 +14,7 @@
 - CANN/HCCL 环境探测：可扫描 Ascend Toolkit 头文件和动态库。
 - HCCL lowering 边界：已建立 collective、dtype、reduce-op 映射占位。
 - HCCL runtime handles：已建立 communicator/stream opaque 句柄占位。
+- 单原语 smoke：已建立 simulator/hccl 共用 CLI 入口。
 
 ## 最急需完成
 

@@ -38,6 +38,20 @@
 5. 将 HCCL 返回码转换为 `HcclCallResult`。
 6. 为 AllReduce 建立首个实机 smoke test。
 
+## Smoke 入口
+
+当前已提供统一 smoke 入口：
+
+```bash
+./scripts/collective_smoke.sh simulator all_reduce 1048576 8
+```
+
+在真实 HCCL 环境完成 lowering 后，应使用同一入口切换后端：
+
+```bash
+./scripts/collective_smoke.sh hccl all_reduce 1048576 8
+```
+
 ## 接入步骤
 
 1. 确认 CANN 环境变量
