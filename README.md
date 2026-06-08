@@ -90,3 +90,5 @@
 ```bash
 ./scripts/collective_smoke.sh simulator all_reduce 1048576 8
 ```
+
+输出会包含 `max_abs_error` 和 `check` 字段，用于快速判断正确性。

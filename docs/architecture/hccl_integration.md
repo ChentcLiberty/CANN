@@ -46,6 +46,15 @@
 ./scripts/collective_smoke.sh simulator all_reduce 1048576 8
 ```
 
+输出包含：
+
+- backend
+- algorithm
+- output_ranks
+- rank0_values
+- max_abs_error
+- check
+
 在真实 HCCL 环境完成 lowering 后，应使用同一入口切换后端：
 
 ```bash

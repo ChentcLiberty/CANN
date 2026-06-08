@@ -1,8 +1,11 @@
 #include "cann_liberty/runtime.h"
 
+#include <algorithm>
 #include <cstdlib>
 #include <exception>
+#include <cmath>
 #include <iostream>
+#include <limits>
 #include <string>
 
 namespace {
@@ -56,6 +59,42 @@ cann_liberty::ClusterBuffers BuildInput(int world_size, std::size_t bytes_per_ra
   return input;
 }
 
+cann_liberty::ClusterBuffers ExpectedOutput(cann_liberty::CollectiveKind kind,
+                                            const cann_liberty::ClusterBuffers& input) {
+  switch (kind) {
+    case cann_liberty::CollectiveKind::AllReduce:
+      return cann_liberty::SimulateAllReduceSum(input);
+    case cann_liberty::CollectiveKind::AllGather:
+      return cann_liberty::SimulateAllGather(input);
+    case cann_liberty::CollectiveKind::ReduceScatter:
+      return cann_liberty::SimulateReduceScatterSum(input);
+    case cann_liberty::CollectiveKind::Broadcast:
+      return cann_liberty::SimulateBroadcast(input, 0);
+    case cann_liberty::CollectiveKind::AllToAll:
+      return cann_liberty::SimulateAllToAll(input);
+  }
+  return {};
+}
+
+double MaxAbsError(const cann_liberty::ClusterBuffers& actual,
+                   const cann_liberty::ClusterBuffers& expected) {
+  if (actual.size() != expected.size()) {
+    return std::numeric_limits<double>::infinity();
+  }
+
+  double max_error = 0.0;
+  for (std::size_t rank = 0; rank < actual.size(); ++rank) {
+    if (actual[rank].size() != expected[rank].size()) {
+      return std::numeric_limits<double>::infinity();
+    }
+    for (std::size_t i = 0; i < actual[rank].size(); ++i) {
+      max_error =
+          std::max(max_error, std::abs(static_cast<double>(actual[rank][i] - expected[rank][i])));
+    }
+  }
+  return max_error;
+}
+
 void Usage(const char* argv0) {
   std::cerr << "usage: " << argv0 << " <backend> <kind> <bytes_per_rank> <world_size>\n";
   std::cerr << "backend: simulator | hccl\n";
@@ -87,13 +126,22 @@ int main(int argc, char** argv) {
     };
 
     const auto result = cann_liberty::ExecuteCollective({backend, 0}, request, input);
+    const auto expected = ExpectedOutput(kind, input);
+    const double max_abs_error = MaxAbsError(result.buffers, expected);
+    const bool passed = max_abs_error == 0.0;
+
     std::cout << "backend=" << result.backend_name
               << ",algorithm=" << result.decision.name
               << ",output_ranks=" << result.buffers.size();
     if (!result.buffers.empty()) {
       std::cout << ",rank0_values=" << result.buffers.front().size();
     }
-    std::cout << '\n';
+    std::cout << ",max_abs_error=" << max_abs_error
+              << ",check=" << (passed ? "pass" : "fail") << '\n';
+
+    if (!passed) {
+      return 1;
+    }
   } catch (const std::exception& err) {
     std::cerr << "collective_smoke failed: " << err.what() << '\n';
     return 1;

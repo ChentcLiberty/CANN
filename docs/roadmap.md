@@ -15,6 +15,7 @@
 - HCCL lowering 边界：已建立 collective、dtype、reduce-op 映射占位。
 - HCCL runtime handles：已建立 communicator/stream opaque 句柄占位。
 - 单原语 smoke：已建立 simulator/hccl 共用 CLI 入口。
+- 单原语正确性校验：smoke 输出 `max_abs_error` 和 `check` 字段。
 
 ## 最急需完成
 
